@@ -632,7 +632,7 @@ async function sendEmail(guestName, guestEmail, eventName) {
       });
 
       // HTML content for the invitation card
-      const url_img = "./rsvp_img.jpg";
+     
       const invitationHTML = `
       <div style="background-color: #f7f7f7; padding: 20px; border-radius: 10px; font-family: 'Arial', sans-serif; width: 80%; margin: auto; border: 2px solid #333;">
           <h2 style="color: #333; text-align: center;">Event Invitation</h2>
