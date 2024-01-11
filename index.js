@@ -4,6 +4,8 @@ const app = express();
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const pdf = require('html-pdf');
+const pdfkit = require('pdfkit');
+const { PassThrough } = require('stream');
 const fs = require('fs');
 app.use(bodyParser.json({ limit: '100mb' }));
 //const { MongoClient } = require('mongodb');
@@ -177,6 +179,71 @@ async function sendRegistrationEmail(email, username) {
 
 
 
+// async function sendEmail(guestName, guestEmail, eventName) {
+//     try {
+//         // Create a transporter with your SMTP server details
+//         const transporter = nodemailer.createTransport({
+//             service: 'gmail',
+//             auth: {
+//                 user: 'lakshin2563@gmail.com', // Replace with your email
+//                 pass: 'ypoe jrma lcfz pmej', // Replace with your email password
+//             },
+//         });
+
+//         // HTML content for the invitation card
+       
+//         const invitationHTML = `
+//         <div style="background-color: #f7f7f7; padding: 20px; border-radius: 10px; font-family: 'Arial', sans-serif; width: 80%; margin: auto; border: 2px solid #333;">
+//             <h2 style="color: #333; text-align: center;">Event Invitation</h2>
+//             <p style="color: #555; font-size: 16px; text-align: center;">Dear ${guestName},</p>
+//             <p style="color: #555; font-size: 16px; text-align: center;">
+//                 Welcome to <strong style="color: #0066cc;">${eventName}</strong>! You are invited to our special event.
+//             </p>
+//             <p style="color: #555; font-size: 16px; text-align: center;">
+//                 Please let us know if you'll be able to attend by responding to this email.
+//             </p>
+//             <p style="color: #555; font-size: 16px; text-align: center;">We look forward to seeing you!</p>
+//         </div>
+//         `;
+
+//         // Options for html-pdf to generate PDF
+//         const pdfOptions = { format: 'Letter' };
+
+//         // Generate PDF from HTML content
+//         pdf.create(invitationHTML, pdfOptions).toFile('./invitation.pdf', async (err, res) => {
+//             if (err) {
+//                 console.error('Error generating PDF:', err);
+//                 return;
+//             }
+
+//             // Read the generated PDF file
+//             const pdfContent = fs.readFileSync(res.filename);
+
+//             // Email content
+//             const mailOptions = {
+//                 from: 'lakshin2563@gmail.com', // Replace with your email
+//                 to: guestEmail,
+//                 subject: 'RSVP Invitation',
+//                 html: `
+//                     <p>Greetings Of the Day!!!!😊</p>
+//                 `,
+//                 attachments: [
+//                     { filename: 'invitation.pdf', content: pdfContent },
+//                     { filename: 'rsvp_img.jpg', path: './rsvp_img.jpg', cid: 'rsvp_image' },
+//                 ],
+//             };
+
+//             // Send email with PDF and image attachments
+//             const info = await transporter.sendMail(mailOptions);
+
+//             console.log('Email sent with PDF and image attachments:', info.response);
+//         });
+//     } catch (error) {
+//         console.error('Error sending email:', error);
+//     }
+// }
+
+
 async function sendEmail(guestName, guestEmail, eventName) {
     try {
         // Create a transporter with your SMTP server details
@@ -188,59 +255,38 @@ async function sendEmail(guestName, guestEmail, eventName) {
             },
         });
 
-        // HTML content for the invitation card
-       
-        const invitationHTML = `
-        <div style="background-color: #f7f7f7; padding: 20px; border-radius: 10px; font-family: 'Arial', sans-serif; width: 80%; margin: auto; border: 2px solid #333;">
-            <h2 style="color: #333; text-align: center;">Event Invitation</h2>
-            <p style="color: #555; font-size: 16px; text-align: center;">Dear ${guestName},</p>
-            <p style="color: #555; font-size: 16px; text-align: center;">
-                Welcome to <strong style="color: #0066cc;">${eventName}</strong>! You are invited to our special event.
-            </p>
-            <p style="color: #555; font-size: 16px; text-align: center;">
-                Please let us know if you'll be able to attend by responding to this email.
-            </p>
-            <p style="color: #555; font-size: 16px; text-align: center;">We look forward to seeing you!</p>
-        </div>
-        `;
+        // Create a PassThrough stream for the PDF
+        const pdfStream = new PassThrough();
 
-        // Options for html-pdf to generate PDF
-        const pdfOptions = { format: 'Letter' };
+        // Create a PDF document
+        const pdfDoc = new pdfkit();
+        pdfDoc.pipe(pdfStream);
+        pdfDoc.text(`Dear ${guestName},\n\n`);
+        pdfDoc.text(`Welcome to ${eventName}! You are invited to our special event.\n`);
+        pdfDoc.text(`Please let us know if you'll be able to attend by responding to this email.\n`);
+        pdfDoc.text(`We look forward to seeing you!\n`);
+        pdfDoc.end();
 
-        // Generate PDF from HTML content
-        pdf.create(invitationHTML, pdfOptions).toFile('./invitation.pdf', async (err, res) => {
-            if (err) {
-                console.error('Error generating PDF:', err);
-                return;
-            }
+        // Email content
+        const mailOptions = {
+            from: 'your-email@gmail.com', // Replace with your email
+            to: guestEmail,
+            subject: 'RSVP Invitation',
+            html: '<p>Greetings Of the Day!!!!😊</p>',
+            attachments: [
+                { filename: 'invitation.pdf', content: pdfStream },
+                { filename: 'rsvp_img.jpg', path: './rsvp_img.jpg', cid: 'rsvp_image' },
+            ],
+        };
 
-            // Read the generated PDF file
-            const pdfContent = fs.readFileSync(res.filename);
+        // Send email with PDF and image attachments
+        const info = await transporter.sendMail(mailOptions);
 
-            // Email content
-            const mailOptions = {
-                from: 'lakshin2563@gmail.com', // Replace with your email
-                to: guestEmail,
-                subject: 'RSVP Invitation',
-                html: `
-                    <p>Greetings Of the Day!!!!😊</p>
-                `,
-                attachments: [
-                    { filename: 'invitation.pdf', content: pdfContent },
-                    { filename: 'rsvp_img.jpg', path: './rsvp_img.jpg', cid: 'rsvp_image' },
-                ],
-            };
-
-            // Send email with PDF and image attachments
-            const info = await transporter.sendMail(mailOptions);
-
-            console.log('Email sent with PDF and image attachments:', info.response);
-        });
+        console.log('Email sent with PDF and image attachments:', info.response);
     } catch (error) {
         console.error('Error sending email:', error);
     }
 }
-
 
 
 module.exports = {
