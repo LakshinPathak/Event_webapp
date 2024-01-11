@@ -244,6 +244,51 @@ async function sendRegistrationEmail(email, username) {
 // }
 
 
+// async function sendEmail(guestName, guestEmail, eventName) {
+//     try {
+//         // Create a transporter with your SMTP server details
+//         const transporter = nodemailer.createTransport({
+//             service: 'gmail',
+//             auth: {
+//                 user: 'lakshin2563@gmail.com', // Replace with your email
+//                 pass: 'ypoe jrma lcfz pmej', // Replace with your email password
+//             },
+//         });
+
+//         // Create a PassThrough stream for the PDF
+//         const pdfStream = new PassThrough();
+
+//         // Create a PDF document
+//         const pdfDoc = new pdfkit();
+//         pdfDoc.pipe(pdfStream);
+//         pdfDoc.text(`Dear ${guestName},\n\n`);
+//         pdfDoc.text(`Welcome to ${eventName}! You are invited to our special event.\n`);
+//         pdfDoc.text(`Please let us know if you'll be able to attend by responding to this email.\n`);
+//         pdfDoc.text(`We look forward to seeing you!\n`);
+//         pdfDoc.end();
+
+//         // Email content
+//         const mailOptions = {
+//             from: 'your-email@gmail.com', // Replace with your email
+//             to: guestEmail,
+//             subject: 'RSVP Invitation',
+//             html: '<p>Greetings Of the Day!!!!😊</p>',
+//             attachments: [
+//                 { filename: 'invitation.pdf', content: pdfStream },
+//                 { filename: 'rsvp_img.jpg', path: './rsvp_img.jpg', cid: 'rsvp_image' },
+//             ],
+//         };
+
+//         // Send email with PDF and image attachments
+//         const info = await transporter.sendMail(mailOptions);
+
+//         console.log('Email sent with PDF and image attachments:', info.response);
+//     } catch (error) {
+//         console.error('Error sending email:', error);
+//     }
+// }
+
+
 async function sendEmail(guestName, guestEmail, eventName) {
     try {
         // Create a transporter with your SMTP server details
@@ -258,13 +303,20 @@ async function sendEmail(guestName, guestEmail, eventName) {
         // Create a PassThrough stream for the PDF
         const pdfStream = new PassThrough();
 
-        // Create a PDF document
+        // Create a PDF document with enhanced styling
         const pdfDoc = new pdfkit();
         pdfDoc.pipe(pdfStream);
-        pdfDoc.text(`Dear ${guestName},\n\n`);
-        pdfDoc.text(`Welcome to ${eventName}! You are invited to our special event.\n`);
-        pdfDoc.text(`Please let us know if you'll be able to attend by responding to this email.\n`);
-        pdfDoc.text(`We look forward to seeing you!\n`);
+
+        // Styling for the invitation text
+        pdfDoc.fontSize(18).font('Helvetica-Bold').fillColor('#333').text(`Dear ${guestName},\n\n`, { align: 'center' });
+
+        pdfDoc.fontSize(16).font('Helvetica').fillColor('#555').text(`Welcome to ${eventName}! You are invited to our special event.`, { align: 'left', indent: 20 });
+
+        pdfDoc.fontSize(16).font('Helvetica-Oblique').fillColor('#555').text(`Please let us know if you'll be able to attend by responding to this email.`, { align: 'left', indent: 20 });
+
+        pdfDoc.fontSize(16).font('Helvetica-Bold').fillColor('#333').text('We look forward to seeing you!\n\n', { align: 'center' });
+
+        // End the PDF document
         pdfDoc.end();
 
         // Email content
