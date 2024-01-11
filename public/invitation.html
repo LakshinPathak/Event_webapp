@@ -57,7 +57,7 @@
      
     <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-dark">
-        <a class="navbar-brand" href="#">Event Registration</a>
+        <a class="navbar-brand" href="#">Event Invitation Card</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -82,8 +82,8 @@
 
     <!-- Event Registration Content -->
     <div class="event-registration-container">
-        <h2>Event Updation</h2>
-        <p>Select an event to Update:</p>
+        <h2>RSVP</h2>
+        <p>Select an Event to Sent Invite:</p>
 
         <!-- Event Selection Form -->
         <form id="event-selection-form">
@@ -104,16 +104,17 @@
             <h2>Event Details</h2>
 
             <div class="form-group">
-                <label for="event-date">Event Date:</label>
-                <input type="date" class="form-control" id="event-date" required>
+                <label for="event-date">Guest Name:</label>
+                <input type="text" class="form-control" id="guest-name" required>
             </div>
 
             <div class="form-group">
-                <label for="additional-details">Additional Details:</label>
-                <textarea class="form-control" id="additional-details" rows="3"></textarea>
+                <label for="additional-details">Guest Email:</label>
+                <input type="email" class="form-control" id="guest-email" required>
+                
             </div>
 
-            <button type="button" class="btn btn-primary" onclick="completeRegistration()">Update</button>
+            <button type="button" class="btn btn-primary" onclick="completeRegistration()">Invite</button>
         </form>
 
     </div>
@@ -160,27 +161,53 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById('event-selection-form').style.display = 'none';
     document.getElementById('event-details-form').style.display = 'block';
 }
-function showPaymentForm() {
-    document.getElementById('event-details-form').style.display = 'none';
-    document.getElementById('payment-form').style.display = 'block';
-}
 
-function completeRegistration() {
+
+ function completeRegistration() {
            
 
             const eventSelect = document.getElementById('event-select');
             const eventName = eventSelect.value;
             //document.getElementById('event-name').value;
-            const eventDate = document.getElementById('event-date').value;
-            const eventDetails = document.getElementById('additional-details').value;
+            const GuestName = document.getElementById('guest-name').value;
+            const GuestEmail = document.getElementById('guest-email').value;
 
-            console.log(eventDetails+"pathakkkkkk"+eventDate+" "+eventName);
-            
-    const url2 = `dashboard.html?script3=true&n_eventName=${eventName}&n_eventDate=${eventDate}&n_eventDetails=${eventDetails}`;
+            console.log("pathakkkkkk"+GuestName+" "+GuestEmail);
 
-    window.location.href = url2;          
-    //window.location.reload(true);
+        send_mail(GuestName,GuestEmail,eventName);
+            window.location.href = "/dashboard.html";
+
         }
+
+         async  function send_mail(guestName,guestEmail,eventName)
+         {
+
+            console.log(guestName+guestEmail);
+
+            try {
+            const response = await fetch('/send-email', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    guestName: guestName,
+                    guestEmail: guestEmail,
+                    eventName: eventName,
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            const result = await response.json();
+          
+        } catch (error) {
+            console.error('Error Sending Email:', error);
+        }
+
+         }
 
     </script>
 

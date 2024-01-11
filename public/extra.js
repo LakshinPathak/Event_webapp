@@ -140,3 +140,10 @@ document.getElementById('update-user-form').addEventListener('submit', function 
 
 // Display initial user list
 displayUserList();
+
+
+
+//  html: `<p>Dear ${guestName},<br>
+//              You are invited to our event!<br>
+//              Please let us know if you'll be able to attend by responding to this email.<br>  
+//                         We look forward to seeing you!</p>`
