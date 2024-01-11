@@ -337,6 +337,380 @@ router.post('/approveUserEvent', async (req, res) => {
       await client.close();
   }
 });
+// async function sendEmail(guestName, guestEmail, eventName) {
+//   try {
+//       // Create a transporter with your SMTP server details
+//       const transporter = nodemailer.createTransport({
+//           service: 'gmail',
+//           auth: {
+//               user: 'lakshin2563@gmail.com', // Replace with your email
+//               pass: 'ypoe jrma lcfz pmej', // Replace with your email password
+//           },
+//       });
+
+//       // HTML content for the invitation card
+//   //     const invitationHTML = `
+//   //     <div style="background-color: #f7f7f7; padding: 20px; border-radius: 10px; font-family: 'Arial', sans-serif;">
+//   //         <h2 style="color: #333; text-align: center;">Event Invitation</h2>
+//   //         <p style="color: #555; font-size: 16px;">Dear ${guestName},</p>
+//   //         <p style="color: #555; font-size: 16px;">
+//   //             Welcome to <strong>${eventName}</strong>! You are invited to our special event.
+//   //         </p>
+//   //         <p style="color: #555; font-size: 16px;">
+//   //             Please let us know if you'll be able to attend by responding to this email.
+//   //         </p>
+//   //         <p style="color: #555; font-size: 16px;">We look forward to seeing you!</p>
+//   //     </div>
+//   // `;
+//   const invitationHTML = `
+//     <div style="background-color: #f7f7f7; padding: 20px; border-radius: 10px; font-family: 'Arial', sans-serif; width: 80%; margin: auto; border: 2px solid #333;">
+//         <h2 style="color: #333; text-align: center;">Event Invitation</h2>
+//         <img src="C://lakshin//CN//event_app//rsvp_img.jpg" style="display: block; margin: auto; width: 50%; border-radius: 10px; margin-bottom: 20px;">
+//         <p style="color: #555; font-size: 16px; text-align: center;">Dear ${guestName},</p>
+//         <p style="color: #555; font-size: 16px; text-align: center;">
+//             Welcome to <strong style="color: #0066cc;">${eventName}</strong>! You are invited to our special event.
+//         </p>
+//         <p style="color: #555; font-size: 16px; text-align: center;">
+//             Please let us know if you'll be able to attend by responding to this email.
+//         </p>
+//         <p style="color: #555; font-size: 16px; text-align: center;">We look forward to seeing you!</p>
+//     </div>
+// `;
+
+
+//       // Options for html-pdf to generate PDF
+//       const pdfOptions = { format: 'Letter' };
+
+//       // Generate PDF from HTML content
+//       pdf.create(invitationHTML, pdfOptions).toFile('./invitation.pdf', async (err, res) => {
+//           if (err) {
+//               console.error('Error generating PDF:', err);
+//               return;
+//           }
+
+//           // Read the generated PDF file
+//           const pdfContent = fs.readFileSync(res.filename);
+
+//           // Email content
+//           const mailOptions = {
+//               from: 'lakshin2563@gmail.com', // Replace with your email
+//               to: guestEmail,
+//               subject: 'RSVP Invitation',
+//               html: `
+//               <p>Greetings Of the Day!!!!😊</p>
+//               `,
+//               attachments: [{ filename: 'invitation.pdf', content: pdfContent }],
+//           };
+
+//           // Send email with PDF attachment
+//           const info = await transporter.sendMail(mailOptions);
+
+//           console.log('Email sent with PDF attachment:', info.response);
+//       });
+//   } catch (error) {
+//       console.error('Error sending email:', error);
+//   }
+// }
+
+
+// async function sendEmail(guestName, guestEmail, eventName) {
+//   try {
+//     // Create a transporter with your SMTP server details
+//     const transporter = nodemailer.createTransport({
+//       service: 'gmail',
+//       auth: {
+//         user: 'lakshin2563@gmail.com', // Replace with your email
+//         pass: 'ypoe jrma lcfz pmej', // Replace with your email password
+//       },
+//     });
+
+//     // Create a PDF document
+//     const pdfDoc = new pdfkit();
+//     pdfDoc.pipe(fs.createWriteStream('./invitation.pdf'));
+
+//     // Add content to the PDF with styling
+//     pdfDoc
+//       .font('Helvetica-Bold')
+//       .fontSize(20)
+//       .text('Event Invitation', { align: 'center', color: '#333', margin: 10 })
+//       .rect(50, 80, 500, 300) // Rectangle for the content
+//       .lineWidth(2)
+//       .stroke('#333') // Border color
+//       .image('./rsvp_img.jpg', 80, 100, { width: 300, align: 'center' })
+//       .fontSize(16)
+//       .text(`Dear ${guestName},`, { align: 'center', color: '#555', margin: [0, 10] })
+//       .text(`Welcome to ${eventName}! You are invited to our special event.`, { align: 'center', color: '#555', margin: [0, 10] })
+//       .text('Please let us know if you\'ll be able to attend by responding to this email.', { align: 'center', color: '#555', margin: [0, 10] })
+//       .text('We look forward to seeing you!', { align: 'center', color: '#555', margin: [0, 10] });
+
+//     // Finalize the PDF
+//     pdfDoc.end();
+
+//     // Read the generated PDF file
+//     const pdfContent = fs.readFileSync('./invitation.pdf');
+
+//     // Email content
+//     const mailOptions = {
+//       from: 'lakshin2563@gmail.com', // Replace with your email
+//       to: guestEmail,
+//       subject: 'RSVP Invitation',
+//       html: `
+//       <p>Greetings Of the Day!!!!😊</p>
+//       `,
+//       attachments: [{ filename: 'invitation.pdf', content: pdfContent }],
+//     };
+
+//     // Send email with PDF attachment
+//     const info = await transporter.sendMail(mailOptions);
+
+//     console.log('Email sent with PDF attachment:', info.response);
+//   } catch (error) {
+//     console.error('Error sending email:', error);
+//   }
+// }
+
+// async function sendEmail(guestName, guestEmail, eventName) {
+//   try {
+//     // Create a transporter with your SMTP server details
+//     const transporter = nodemailer.createTransport({
+//       service: 'gmail',
+//       auth: {
+//         user: 'lakshin2563@gmail.com', // Replace with your email
+//         pass: 'ypoe jrma lcfz pmej', // Replace with your email password
+//       },
+//     });
+
+//     // Create a PDF document
+//     const pdfDoc = new pdfkit();
+//     pdfDoc.pipe(fs.createWriteStream('./invitation.pdf'));
+
+//     // Add content to the PDF with styling
+//     pdfDoc
+//       .font('Helvetica-Bold')
+//       .fontSize(20)
+//       .text('Event Invitation', { align: 'center', color: '#333', margin: 10 })
+//       .moveDown(1) // Add some space
+//       .image('./rsvp_img.jpg', { width: 300, align: 'center' })
+//       .moveDown(2) // Add some space after the image
+//       .font('Helvetica')
+//       .fontSize(16)
+//       .text(`Dear ${guestName},`, { align: 'center', color: '#555', margin: [0, 10] })
+//       .text(`Welcome to ${eventName}! You are invited to our special event.`, { align: 'center', color: '#555', margin: [0, 10] })
+//       .text('Please let us know if you\'ll be able to attend by responding to this email.', { align: 'center', color: '#555', margin: [0, 10] })
+//       .text('We look forward to seeing you!', { align: 'center', color: '#555', margin: [0, 10] })
+//       .moveDown(2) // Add some space before the table
+
+//     // Create a table for colorful content
+//     const table = {
+//       headers: ['Header 1', 'Header 2', 'Header 3'],
+//       rows: [
+//         ['Content 1', 'Content 2', 'Content 3'],
+//         ['Content 4', 'Content 5', 'Content 6'],
+//       ],
+//       // Customize the style of the table
+//       headerStyles: { fillColor: '#337ab7', color: 'white' },
+//       bodyStyles: { fillColor: '#d9edf7' },
+//     };
+
+//     pdfDoc.moveDown().table(table, 100, pdfDoc.y + 30, { width: 400 });
+
+//     // Finalize the PDF
+//     pdfDoc.end();
+
+//     // Read the generated PDF file
+//     const pdfContent = fs.readFileSync('./invitation.pdf');
+
+//     // Email content
+//     const mailOptions = {
+//       from: 'lakshin2563@gmail.com', // Replace with your email
+//       to: guestEmail,
+//       subject: 'RSVP Invitation',
+//       html: `
+//       <p>Greetings Of the Day!!!!😊</p>
+//       `,
+//       attachments: [{ filename: 'invitation.pdf', content: pdfContent }],
+//     };
+
+//     // Send email with PDF attachment
+//     const info = await transporter.sendMail(mailOptions);
+
+//     console.log('Email sent with PDF attachment:', info.response);
+//   } catch (error) {
+//     console.error('Error sending email:', error);
+//   }
+// }
+
+
+// async function sendEmail(guestName, guestEmail, eventName) {
+//   try {
+//       // Create a transporter with your SMTP server details
+//       const transporter = nodemailer.createTransport({
+//           service: 'gmail',
+//           auth: {
+//               user: 'lakshin2563@gmail.com', // Replace with your email
+//               pass: 'ypoe jrma lcfz pmej', // Replace with your email password
+//           },
+//       });
+
+//       // HTML content for the invitation card
+//   //     const invitationHTML = `
+//   //     <div style="background-color: #f7f7f7; padding: 20px; border-radius: 10px; font-family: 'Arial', sans-serif;">
+//   //         <h2 style="color: #333; text-align: center;">Event Invitation</h2>
+//   //         <p style="color: #555; font-size: 16px;">Dear ${guestName},</p>
+//   //         <p style="color: #555; font-size: 16px;">
+//   //             Welcome to <strong>${eventName}</strong>! You are invited to our special event.
+//   //         </p>
+//   //         <p style="color: #555; font-size: 16px;">
+//   //             Please let us know if you'll be able to attend by responding to this email.
+//   //         </p>
+//   //         <p style="color: #555; font-size: 16px;">We look forward to seeing you!</p>
+//   //     </div>
+//   // `;
+
+//   const url_img = "./rsvp_img.jpg";
+//   const invitationHTML = `
+//     <div style="background-color: #f7f7f7; padding: 20px; border-radius: 10px; font-family: 'Arial', sans-serif; width: 80%; margin: auto; border: 2px solid #333;">
+//         <h2 style="color: #333; text-align: center;">Event Invitation</h2>
+//         <img src="${url_img}" alt="RSVP Image" style="display: block; margin: auto; width: 50%; border-radius: 10px; margin-bottom: 20px;">
+//         <p style="color: #555; font-size: 16px; text-align: center;">Dear ${guestName},</p>
+//         <p style="color: #555; font-size: 16px; text-align: center;">
+//             Welcome to <strong style="color: #0066cc;">${eventName}</strong>! You are invited to our special event.
+//         </p>
+//         <p style="color: #555; font-size: 16px; text-align: center;">
+//             Please let us know if you'll be able to attend by responding to this email.
+//         </p>
+//         <p style="color: #555; font-size: 16px; text-align: center;">We look forward to seeing you!</p>
+//     </div>
+//   `;
+  
+
+
+//       // Options for html-pdf to generate PDF
+//       const pdfOptions = { format: 'Letter' };
+
+//       // Generate PDF from HTML content
+//       pdf.create(invitationHTML, pdfOptions).toFile('./invitation.pdf', async (err, res) => {
+//           if (err) {
+//               console.error('Error generating PDF:', err);
+//               return;
+//           }
+
+//           // Read the generated PDF file
+//           const pdfContent = fs.readFileSync(res.filename);
+
+//           // Email content
+//           const mailOptions = {
+//               from: 'lakshin2563@gmail.com', // Replace with your email
+//               to: guestEmail,
+//               subject: 'RSVP Invitation',
+//               html: `
+//                   <p>Greetings Of the Day!!!!😊</p>
+//               `,
+//               attachments: [{ filename: 'invitation.pdf', content: pdfContent }],
+//           };
+
+//           // Send email with PDF attachment
+//           const info = await transporter.sendMail(mailOptions);
+
+//           console.log('Email sent with PDF attachment:', info.response);
+//       });
+//   } catch (error) {
+//       console.error('Error sending email:', error);
+//   }
+// }
+
+
+async function sendEmail(guestName, guestEmail, eventName) {
+  try {
+      // Create a transporter with your SMTP server details
+      const transporter = nodemailer.createTransport({
+          service: 'gmail',
+          auth: {
+              user: 'lakshin2563@gmail.com', // Replace with your email
+              pass: 'ypoe jrma lcfz pmej', // Replace with your email password
+          },
+      });
+
+      // HTML content for the invitation card
+      const url_img = "./rsvp_img.jpg";
+      const invitationHTML = `
+      <div style="background-color: #f7f7f7; padding: 20px; border-radius: 10px; font-family: 'Arial', sans-serif; width: 80%; margin: auto; border: 2px solid #333;">
+          <h2 style="color: #333; text-align: center;">Event Invitation</h2>
+           <p style="color: #555; font-size: 16px; text-align: center;">Dear ${guestName},</p>
+          <p style="color: #555; font-size: 16px; text-align: center;">
+              Welcome to <strong style="color: #0066cc;">${eventName}</strong>! You are invited to our special event.
+          </p>
+          <p style="color: #555; font-size: 16px; text-align: center;">
+              Please let us know if you'll be able to attend by responding to this email.
+          </p>
+          <p style="color: #555; font-size: 16px; text-align: center;">We look forward to seeing you!</p>
+      </div>
+      `;
+
+      // Options for html-pdf to generate PDF
+      const pdfOptions = { format: 'Letter' };
+
+      // Generate PDF from HTML content
+      pdf.create(invitationHTML, pdfOptions).toFile('./invitation.pdf', async (err, res) => {
+          if (err) {
+              console.error('Error generating PDF:', err);
+              return;
+          }
+
+          // Read the generated PDF file
+          const pdfContent = fs.readFileSync(res.filename);
+
+          // Email content
+          const mailOptions = {
+              from: 'lakshin2563@gmail.com', // Replace with your email
+              to: guestEmail,
+              subject: 'RSVP Invitation',
+              html: `
+                  <p>Greetings Of the Day!!!!😊</p>
+              `,
+              attachments: [
+                  { filename: 'invitation.pdf', content: pdfContent },
+                  { filename: 'rsvp_img.jpg', path: './rsvp_img.jpg', cid: 'rsvp_image' },
+              ],
+          };
+
+          // Send email with PDF and image attachments
+          const info = await transporter.sendMail(mailOptions);
+
+          console.log('Email sent with PDF and image attachments:', info.response);
+      });
+  } catch (error) {
+      console.error('Error sending email:', error);
+  }
+}
+
+
+
+router.post('/send-email', async (req, res) => {
+  try {
+      const { guestName, guestEmail,eventName } = req.body;
+
+      // // Connect to MongoDB
+      // await client.connect();
+
+      // // Access the database
+      // const db = client.db(dbName);
+
+      // Perform any additional logic related to sending email or saving details to the database if needed
+
+      // Call the function to send email
+      await sendEmail(guestName, guestEmail,eventName);
+
+      // Respond with a success message
+      res.json({ success: true, message: 'Email sent successfully!' });
+  } catch (error) {
+      console.error('Error sending email:', error);
+      res.status(500).json({ success: false, message: 'Internal server error' });
+  } finally {
+      // Close the MongoDB connection
+      await client.close();
+  }
+});
 
 
 
