@@ -5,7 +5,6 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const pdf = require('html-pdf');
 const fs = require('fs');
-const pdfkit = require('pdfkit');
 app.use(bodyParser.json({ limit: '100mb' }));
 //const { MongoClient } = require('mongodb');
 const port = 3000;
