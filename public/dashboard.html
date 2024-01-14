@@ -246,7 +246,7 @@ p {
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Home</a>
+                    <a class="nav-link" href="homepage.html">Home</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="events.html">Events</a>
@@ -262,9 +262,11 @@ p {
                     <a class="nav-link" href="settings.html">Settings</a>
                 </li>
 
-                <!-- <li class="nav-item">
-                    <a class="nav-link" href="eliza.html">Chatbot</a>
-                </li> -->
+                <li class="nav-item">
+                    <!-- <a  class="nav-link"  href="#" id="runCodeLink">Chatbot</a> -->
+                    <button id="myButton" onclick="myFunction()">Click me</button>
+                    <!-- <a class="nav-link" href="eliza.html">Chatbot</a> -->
+                </li>
                 
                 <li class="nav-item">
                     <a class="nav-link" href="/index.html">Logout</a>
@@ -296,6 +298,9 @@ p {
         </table>
 
     </div>
+
+
+    <div id="result"></div>
     
 </div>
     
@@ -309,6 +314,11 @@ p {
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <script>
+             function myFunction() {
+                console.log('function will be called!!!!!');
+        runCode();  
+    }
+
       document.addEventListener('DOMContentLoaded', function () {
  
     const urlParams = new URLSearchParams(window.location.search);
@@ -364,13 +374,46 @@ p {
             const loggedInUser =  sessionStorage.getItem("loggedInUser") || urlParams.get("ffusername") ;
             console.log(loggedInUser);
             document.getElementById('user-info').innerHTML = `Logged in as: <a href="#">${loggedInUser}</a>`;
-   
-
-    
+  
+       
+            
     
 });
 
+async function runCode() {
+    //eliza-py-master/eliza.py correct
+            const codePath = 'eliza-py-master/eliza.py'; // Replace with the actual path
+//eliza-master/a.py
 
+            try {
+                const response = await fetch('/runcode', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ codePath }),
+                });
+                console.log("pathakkkkk")
+                const data = await response.json();
+
+                if (response.ok) {
+                    
+                    const chatbotWindow = window.open('', '_blank');
+                chatbotWindow.document.write(`<h1>Chatbot Output</h1><p>${data.result}</p>`);
+
+                //   const outputWindow = window.open('', 'Output Window', 'width=600,height=400');
+            
+            // Write the result to the new window
+           // outputWindow.document.write(`<pre>${data.result}</pre>`);
+                     document.getElementById('result').innerText =`hii`; //`Result: ${data.result}`;
+                } else {
+                    document.getElementById('result').innerText = `Error: ${data.message}`;
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('result').innerText = 'Internal server error';
+            }
+        }
 
 async  function updateevent(eventName, n_eventDetails, n_eventDate,n_loggedInUser)
     {
