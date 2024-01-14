@@ -7,6 +7,8 @@ const pdf = require('html-pdf');
 const pdfkit = require('pdfkit');
 const { PassThrough } = require('stream');
 const fs = require('fs');
+const { exec } = require('child_process');
+const path = require('path');
 app.use(bodyParser.json({ limit: '100mb' }));
 //const { MongoClient } = require('mongodb');
 const port = 3000;
@@ -19,6 +21,7 @@ app.use(cors());
 const uri = "mongodb+srv://lakshinpathak2003:nirma123@cluster0.53mqvik.mongodb.net/?retryWrites=true&w=majority";
 //mongodb+srv://lakshinpathak2003:<password>@cluster0.53mqvik.mongodb.net/
 app.use(express.static('public'));
+app.use(express.static('eliza-master'));
 app.use(express.json());
 
 
@@ -95,198 +98,6 @@ async function sendRegistrationEmail(email, username) {
         console.error("Error sending registration email:", error);
     }
 }
-
-
-
-
-// async function sendEmail(guestName, guestEmail, eventName) {
-//     try {
-//         // Create a transporter with your SMTP server details
-//         const transporter = nodemailer.createTransport({
-//             service: 'gmail',
-//             auth: {
-//                 user: 'lakshin2563@gmail.com', // Replace with your email
-//                 pass: 'ypoe jrma lcfz pmej', // Replace with your email password
-//             },
-//         });
-
-//         // HTML content for the invitation card
-//     //     const invitationHTML = `
-//     //     <div style="background-color: #f7f7f7; padding: 20px; border-radius: 10px; font-family: 'Arial', sans-serif;">
-//     //         <h2 style="color: #333; text-align: center;">Event Invitation</h2>
-//     //         <p style="color: #555; font-size: 16px;">Dear ${guestName},</p>
-//     //         <p style="color: #555; font-size: 16px;">
-//     //             Welcome to <strong>${eventName}</strong>! You are invited to our special event.
-//     //         </p>
-//     //         <p style="color: #555; font-size: 16px;">
-//     //             Please let us know if you'll be able to attend by responding to this email.
-//     //         </p>
-//     //         <p style="color: #555; font-size: 16px;">We look forward to seeing you!</p>
-//     //     </div>
-//     // `;
-  
-//     const url_img = "./rsvp_img.jpg";
-//     const invitationHTML = `
-//       <div style="background-color: #f7f7f7; padding: 20px; border-radius: 10px; font-family: 'Arial', sans-serif; width: 80%; margin: auto; border: 2px solid #333;">
-//           <h2 style="color: #333; text-align: center;">Event Invitation</h2>
-//           <img src="${url_img}" alt="RSVP Image" style="display: block; margin: auto; width: 50%; border-radius: 10px; margin-bottom: 20px;">
-//           <p style="color: #555; font-size: 16px; text-align: center;">Dear ${guestName},</p>
-//           <p style="color: #555; font-size: 16px; text-align: center;">
-//               Welcome to <strong style="color: #0066cc;">${eventName}</strong>! You are invited to our special event.
-//           </p>
-//           <p style="color: #555; font-size: 16px; text-align: center;">
-//               Please let us know if you'll be able to attend by responding to this email.
-//           </p>
-//           <p style="color: #555; font-size: 16px; text-align: center;">We look forward to seeing you!</p>
-//       </div>
-//     `;
-    
-
-
-//         // Options for html-pdf to generate PDF
-//         const pdfOptions = { format: 'Letter' };
-
-//         // Generate PDF from HTML content
-//         pdf.create(invitationHTML, pdfOptions).toFile('./invitation.pdf', async (err, res) => {
-//             if (err) {
-//                 console.error('Error generating PDF:', err);
-//                 return;
-//             }
-
-//             // Read the generated PDF file
-//             const pdfContent = fs.readFileSync(res.filename);
-
-//             // Email content
-//             const mailOptions = {
-//                 from: 'lakshin2563@gmail.com', // Replace with your email
-//                 to: guestEmail,
-//                 subject: 'RSVP Invitation',
-//                 html: `
-//                     <p>Greetings Of the Day!!!!😊</p>
-//                 `,
-//                 attachments: [{ filename: 'invitation.pdf', content: pdfContent }],
-//             };
-
-//             // Send email with PDF attachment
-//             const info = await transporter.sendMail(mailOptions);
-
-//             console.log('Email sent with PDF attachment:', info.response);
-//         });
-//     } catch (error) {
-//         console.error('Error sending email:', error);
-//     }
-// }
-
-
-
-// async function sendEmail(guestName, guestEmail, eventName) {
-//     try {
-//         // Create a transporter with your SMTP server details
-//         const transporter = nodemailer.createTransport({
-//             service: 'gmail',
-//             auth: {
-//                 user: 'lakshin2563@gmail.com', // Replace with your email
-//                 pass: 'ypoe jrma lcfz pmej', // Replace with your email password
-//             },
-//         });
-
-//         // HTML content for the invitation card
-       
-//         const invitationHTML = `
-//         <div style="background-color: #f7f7f7; padding: 20px; border-radius: 10px; font-family: 'Arial', sans-serif; width: 80%; margin: auto; border: 2px solid #333;">
-//             <h2 style="color: #333; text-align: center;">Event Invitation</h2>
-//             <p style="color: #555; font-size: 16px; text-align: center;">Dear ${guestName},</p>
-//             <p style="color: #555; font-size: 16px; text-align: center;">
-//                 Welcome to <strong style="color: #0066cc;">${eventName}</strong>! You are invited to our special event.
-//             </p>
-//             <p style="color: #555; font-size: 16px; text-align: center;">
-//                 Please let us know if you'll be able to attend by responding to this email.
-//             </p>
-//             <p style="color: #555; font-size: 16px; text-align: center;">We look forward to seeing you!</p>
-//         </div>
-//         `;
-
-//         // Options for html-pdf to generate PDF
-//         const pdfOptions = { format: 'Letter' };
-
-//         // Generate PDF from HTML content
-//         pdf.create(invitationHTML, pdfOptions).toFile('./invitation.pdf', async (err, res) => {
-//             if (err) {
-//                 console.error('Error generating PDF:', err);
-//                 return;
-//             }
-
-//             // Read the generated PDF file
-//             const pdfContent = fs.readFileSync(res.filename);
-
-//             // Email content
-//             const mailOptions = {
-//                 from: 'lakshin2563@gmail.com', // Replace with your email
-//                 to: guestEmail,
-//                 subject: 'RSVP Invitation',
-//                 html: `
-//                     <p>Greetings Of the Day!!!!😊</p>
-//                 `,
-//                 attachments: [
-//                     { filename: 'invitation.pdf', content: pdfContent },
-//                     { filename: 'rsvp_img.jpg', path: './rsvp_img.jpg', cid: 'rsvp_image' },
-//                 ],
-//             };
-
-//             // Send email with PDF and image attachments
-//             const info = await transporter.sendMail(mailOptions);
-
-//             console.log('Email sent with PDF and image attachments:', info.response);
-//         });
-//     } catch (error) {
-//         console.error('Error sending email:', error);
-//     }
-// }
-
-
-// async function sendEmail(guestName, guestEmail, eventName) {
-//     try {
-//         // Create a transporter with your SMTP server details
-//         const transporter = nodemailer.createTransport({
-//             service: 'gmail',
-//             auth: {
-//                 user: 'lakshin2563@gmail.com', // Replace with your email
-//                 pass: 'ypoe jrma lcfz pmej', // Replace with your email password
-//             },
-//         });
-
-//         // Create a PassThrough stream for the PDF
-//         const pdfStream = new PassThrough();
-
-//         // Create a PDF document
-//         const pdfDoc = new pdfkit();
-//         pdfDoc.pipe(pdfStream);
-//         pdfDoc.text(`Dear ${guestName},\n\n`);
-//         pdfDoc.text(`Welcome to ${eventName}! You are invited to our special event.\n`);
-//         pdfDoc.text(`Please let us know if you'll be able to attend by responding to this email.\n`);
-//         pdfDoc.text(`We look forward to seeing you!\n`);
-//         pdfDoc.end();
-
-//         // Email content
-//         const mailOptions = {
-//             from: 'your-email@gmail.com', // Replace with your email
-//             to: guestEmail,
-//             subject: 'RSVP Invitation',
-//             html: '<p>Greetings Of the Day!!!!😊</p>',
-//             attachments: [
-//                 { filename: 'invitation.pdf', content: pdfStream },
-//                 { filename: 'rsvp_img.jpg', path: './rsvp_img.jpg', cid: 'rsvp_image' },
-//             ],
-//         };
-
-//         // Send email with PDF and image attachments
-//         const info = await transporter.sendMail(mailOptions);
-
-//         console.log('Email sent with PDF and image attachments:', info.response);
-//     } catch (error) {
-//         console.error('Error sending email:', error);
-//     }
-// }
 
 
 async function sendEmail(guestName, guestEmail, eventName) {
@@ -683,11 +494,14 @@ app.get('/getAllUsers', async (req, res) => {
 // Endpoint for deleting a user
 app.delete('/deleteUser', async (req, res) => {
     const { username } = req.body;
+    console.log(req.body);
+    console.log(username);
 
     try {
 
         // Check if the username exists
         const existingUser = await User.findOne({ username });
+       
         
 
         if (!existingUser) {
@@ -696,6 +510,9 @@ app.delete('/deleteUser', async (req, res) => {
 
         // Delete the user
         await User.deleteOne({ username });
+       
+       
+        await Event.deleteOne({ loggedInUser:username });  
 
         return res.json({ success: true, message: 'User deleted successfully.' });
     } catch (error) {
@@ -735,6 +552,72 @@ app.post('/updateuser', async (req, res) => {
 
 
 
+
+
+app.post('/runcode', async (req, res) => {
+   
+        // const { codePath } = req.body;
+        // console.log("lakshinnnnnnn");
+        // console.log(codePath)
+       
+        try {
+            const { codePath } = req.body;
+           
+            console.log('index.js here')
+            // Validate the input code (you may want to add more validation)
+            if (!codePath || typeof codePath !== 'string') {
+              return res.status(400).json({ success: false, message: 'Invalid code provided.' });
+            }
+          
+            // Call your code execution function (replace runUserCode with your actual function)
+            const result = await runUserCode(codePath);
+           
+            // Respond with the result of code execution
+            res.json({ success: true, result });
+          } catch (error) {
+            console.error(error);
+            res.status(500).json({ success: false, message: 'Internal server error' });
+          }
+
+//     const scriptPath = path.join(__dirname, 'eliza-master', 'eliza.py');
+
+//   //  Execute the Python script using child_process
+//     exec(`python ${scriptPath}`, (error, stdout, stderr) => {
+//         if (error) {
+//             console.error(`Error: ${error.message}`);
+//             return res.status(500).send('Internal Server Error');
+//         }
+//         console.log(`stdout: ${stdout}`);
+//         console.error(`stderr: ${stderr}`);
+//         res.send('Python script executed successfully!');
+//     });
+
+
+
+});
+
+
+async function runUserCode(codePath) {
+    console.log('shrutiii')
+    return new Promise((resolve, reject) => {
+      // Execute the Python code using child_process
+      exec(`python "${codePath}"`, (error, stdout, stderr) => {
+        console.log('lbp')
+        if (error) {
+          console.error(`Error: ${error.message}`);
+          
+          reject('Error executing Python code.');
+        } else {
+            console.log("hiiiiiii")
+          console.log(`stdout: ${stdout}`);
+          console.error(`stderr: ${stderr}`);
+          resolve(stdout);
+        }
+      });
+    });
+  }
+
+  
 
 
 app.listen(port, () => {
