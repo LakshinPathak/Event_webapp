@@ -65,7 +65,8 @@ const GOOGLE_PRIVATE_KEY = "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0
 
  //"MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC5yPR8+2HhkQ74\nnL2LKcxDDRU+v/+pQJbfkdc8CEV5lRhA5rkNpbNN36wbwMerpeEfNveaKgivibox\nGiD3opP+/qxmHl24Y7aGVN63VIvHfScr6QBLOBAFf76bmYKdbX1OIpaKhswdC7ch\nfGuyunVisKLvxR1dXUbBTpxoIzEfHx7kR3jqNqtgQzVl+XB4Zu4vWjoeQqw4sKDq\nACeGT2WvHt340tdn37CoZDBj+qh24EY9PqzU0313sI3hnsmpdBxdxU0dV0Ocpams\nYfoJ6tLoSifOpsvdQwwtIBiyDk4Bz91tMhXMwko2V2TDP+t4Xv7IrMsQ9l6Vhjbd\nM/XHEihJAgMBAAECggEAAtaO5EE42mfLY+viZLeuPvtPrvDi7cnRTuKyTYtOIxCD\n2YCiJL26cqmZ6PtLHD8BTzyZOrnX/nUrACix2+aYE9tTHzo+h0cVWOb/V1X2JAWF\nmCuhOATyuwrGYCfPsX+khubgstwNToeedBIBA9l1BUgagnGEmdJczC4wayeCeW21\nw7E0HGa24PwZAe2sjyldUTCWQJTtumFoB1poyh4lL+E888L8NB8AMrxHeTMbAIUT\ny6I7M4pmkailENEMEgWsETSI7AQZrvQYSaTnkZVshW8W56knbOmcTOIShqu7MPXx\niAa+bfE5gHCQqEzBWYDzksG7y3C1eINl8eXUYVU82wKBgQDqc2MIIxa3d+/KYGko\nxnf2v6DofcRAcGBdPIzjzEg0E2UIREq84ElOGWX9NMxwZwdwzKLGc6rFCy0xLysk\niGphNjdmBRepMvebmejizQVAnyC7jmiM3LpymuJVM4XGpAxvn9L0619LTuDKWGqh\ni0SuqssLUB9YhsR+YKwUcAIxywKBgQDK3Hc4lPd688u6SFctL80Bm6TVvSvgxa31\nqi9BCO3CPmn4kOCV1f40Fpsa0BT7Fm6t9xnq9IuFZW06p/Bp6pjF98wXSA8Ywh/H\n0ihR4b2yoDMuQ7kA5GWvTrnYRZLrgnb55FB6wSvoBPrRmSMya67w8UTHFOEwcoON\nn5OzBDo7uwKBgHFXlSHC7OGHfwpkb5JB2I8WdzDOVEkeysdoVWhvQtzCH47OjR8g\ngu/ZwX+Wvdr9RBCZLXwpQP5/d7qWZhIETQFwF3ofrh+jPycfUgILQaXLCCUEJLEs\nqIptLEwqW1r7xfNU3cR/4ZLjsDLCadJtJKgYc46ljnHavTWngKlkuPrfAoGBAJmO\n42xgTymyLFA5fEwHOA70i4UD6pf9613f0l9Pa/KynjL7MBYb4434YracNpWOeH+V\nYfgZ3xc+HL3e7Dywya5pkgM5l7vtDnOK4NyCnb7+R1/JAdzsBxD57fIJUFqX6onk\nywrw+NRsGJTab+s12jom2CI+6utqc6yb1AkZtR8LAoGAKX+BDovZ9ZNLF9ySGPq/\ndmfMssAj8lDQ6TcaNvco3kErsatHBUn1z+2Iak6jlj95lM1YqvqBusvEaHR2ZLGi\nLQ1lYQihvacruxST2cDXuPvgL5jD2ACZGijIzUzqap7HcTaf2b/lnPRjd1WWl/o+\n1eJmJpG8zG5RfINeaGZMMTc=".split(String.raw`\n`).join('\n');
 
- const GOOGLE_CLIENT_EMAIL = "calender-key@event-calender-411413.iam.gserviceaccount.com";
+ const GOOGLE_CLIENT_EMAIL ="lakshin2563@gmail.com";
+ // "calender-key@event-calender-411413.iam.gserviceaccount.com";
 const GOOGLE_PROJECT_NUMBER = "771496546384";
 
 const GOOGLE_CALENDAR_ID = "4a80cfaebace8d0965cfa4f5c1215249810dc0cd43372bca80a5964a1100c1a3@group.calendar.google.com";
@@ -98,18 +99,21 @@ app.post('/createGoogleCalendarEvent', async (req, res) => {
       });
 
         // Set the 'auth' property after authentication
-        calendar.events.insert({
-            auth,
-            calendarId: GOOGLE_CALENDAR_ID,
-            resource: eventData,
-        }, (err, event) => {
-            if (err) {
-                console.error('Error creating Google Calendar Event:', err);
-                res.status(500).json({ success: false, message: 'Internal server error' });
-            } else {
-                console.log('Google Calendar Event created:', event.data);
-                res.json({ success: true, message: 'Google Calendar Event created successfully!' });
-            }
+        auth.getClient().then(a=>{
+            calendar.events.insert({
+                auth: a,
+                calendarId: GOOGLE_CALENDAR_ID,
+                resource: eventData,
+            }, (err, event) => {
+                if (err) {
+                    console.error('Error creating Google Calendar Event:', err);
+                    res.status(500).json({ success: false, message: 'Internal server error' });
+                } else {
+                    console.log('Google Calendar Event created:', event.data);
+                    res.json({ success: true, message: 'Google Calendar Event created successfully!' });
+                }
+        })
+       
         });
     } catch (error) {
         console.error('Error creating Google Calendar Event:', error);
@@ -609,11 +613,11 @@ app.get('/getAllUsers', async (req, res) => {
 });
 
 
-// Endpoint for deleting a user
+// Endpoint for deleting a user 
 app.delete('/deleteUser', async (req, res) => {
     const { username } = req.body;
-    console.log(req.body);
-    console.log(username);
+    //console.log(req.body);
+    //console.log(username);
 
     try {
 
@@ -629,8 +633,8 @@ app.delete('/deleteUser', async (req, res) => {
         // Delete the user
         await User.deleteOne({ username });
        
-       
-        await Event.deleteOne({ loggedInUser:username });  
+       // Delete the user's  registered event
+        await Event.deleteOne({loggedInUser: username , isApproved: true});  
 
         return res.json({ success: true, message: 'User deleted successfully.' });
     } catch (error) {
