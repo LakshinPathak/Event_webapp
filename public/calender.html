@@ -47,34 +47,65 @@ fetch(`/getAllEvents?loggedInUser=${loggedInUser}`)
             // Iterate through each event and create Google Calendar event
             data.forEach(event => {
 
+    //            const eventDate_end = new Date(event.eventDate);
+    //    eventDate_end.setDate(eventDate_end.getDate() + 2);
 
+                // const googleCalendarEvent = {
+                //     'summary': event.eventName,
+                //     'location': event.eventDetails,
+                //     'description': 'Event Saved In Calender',
+                //     'start': {
+                //         'dateTime': new Date(event.eventDate+"T10:00:00").toISOString(),
+                //         'timeZone': 'UTC', // Adjust timezone as needed
+                //     },
+                //     'end': {
+                //         'dateTime': new Date(eventDate_end+"T12:00:00").toISOString(),
+                //         'timeZone': 'UTC', // Adjust timezone as needed
+                //     },
+                //     'attendees': [],
+                //     'reminders': {
+                //         'useDefault': false,
+                //         'overrides': [
+                //             { 'method': 'email', 'minutes': 24 * 60 },
+                //             { 'method': 'popup', 'minutes': 10 },
+                //         ],
+                //     },
+                // };
+                const eventDate = new Date(event.eventDate); // Assuming event.eventDate is a valid date string or Date object
+
+// Adjust start time to 10:00:00
+eventDate.setHours(10, 0, 0);
+
+const eventDateTime = eventDate.toISOString();
                 const googleCalendarEvent = {
-                    'summary': event.eventName,
-                    'location': event.eventDetails,
-                    'description': 'Event Saved In Calender',
-                    'start': {
-                        'dateTime': new Date(event.eventDate).toISOString(),
-                        'timeZone': 'UTC', // Adjust timezone as needed
-                    },
-                    'end': {
-                        'dateTime': new Date(event.eventDate).toISOString(),
-                        'timeZone': 'UTC', // Adjust timezone as needed
-                    },
-                    'attendees': [],
-                    'reminders': {
-                        'useDefault': false,
-                        'overrides': [
-                            { 'method': 'email', 'minutes': 24 * 60 },
-                            { 'method': 'popup', 'minutes': 10 },
-                        ],
-                    },
-                };
+    'summary': event.eventName,
+    'location': event.eventDetails,
+    'description': 'Event Saved In Calendar',
+    'start': {
+        'dateTime': eventDateTime,
+        'timeZone': 'UTC', // Adjust timezone as needed
+    },
+    'end': {
+        'dateTime': new Date(eventDate.getTime() + (2 * 24 * 60 * 60 * 1000)).toISOString(), // Adding 2 days to the start time
+        'timeZone': 'UTC', // Adjust timezone as needed
+    },
+    'attendees': [],
+    'reminders': {
+        'useDefault': false,
+        'overrides': [
+            { 'method': 'email', 'minutes': 24 * 60 },
+            { 'method': 'popup', 'minutes': 10 },
+        ],
+    },
+};
+
+
                 console.log(googleCalendarEvent)
                 // // // Call the endpoint to create a Google Calendar event
                 fetch('/createGoogleCalendarEvent', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json',
+                       'Content-Type': 'application/json',
                     },
                     body: JSON.stringify(googleCalendarEvent),
                 })
