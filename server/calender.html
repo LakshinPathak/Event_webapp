@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Calendar Events</title>
+</head>
+<body>
+    <h1>Google Calendar Events</h1>
+
+    <button onclick="fetchDatabaseEvents()">Fetch Database Events</button>
+    <button onclick="createGoogleCalendarEvent()">Create Google Calendar Event</button>
+    <button onclick="fetchGoogleCalendarEvents()">Fetch Google Calendar Events</button>
+
+    <div id="databaseEvents"></div>
+    <div id="googleCalendarEvents"></div>
+
+    <script>
+        async function fetchDatabaseEvents() {
+            const response = await fetch('/fetchDatabaseEvents');
+            const data = await response.json();
+
+            document.getElementById('databaseEvents').innerText = JSON.stringify(data);
+        }
+
+        async function createGoogleCalendarEvent() {
+            const response = await fetch('/createGoogleCalendarEvent');
+            const data = await response.json();
+
+            alert(data);
+        }
+
+        async function fetchGoogleCalendarEvents() {
+            const response = await fetch('/getGoogleCalendarEvents');
+            const data = await response.json();
+
+            document.getElementById('googleCalendarEvents').innerText = JSON.stringify(data);
+        }
+    </script>
+</body>
+</html>
