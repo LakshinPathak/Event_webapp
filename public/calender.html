@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Calendar Events</title>
+</head>
+<body>
+    <h1>Google Calendar Events</h1>
+
+    <button onclick="fetchDatabaseEvents()">Fetch Database Events</button>
+    <button onclick="createGoogleCalendarEvent()">Create Google Calendar Event</button>
+    <button onclick="fetchGoogleCalendarEvents()">Fetch Google Calendar Events</button>
+
+    <div id="databaseEvents"></div>
+    <div id="googleCalendarEvents"></div>
+
+    <script>
+        async function fetchDatabaseEvents() {
+            const loggedInUser = sessionStorage.getItem("loggedInUser");
+           // console.log(loggedInUser);
+
+    console.log("pathakkkkk");
+fetch(`/getAllEvents?loggedInUser=${loggedInUser}`)
+    .then(response => response.json())
+    .then(data => {
+       // console.log(loggedInUser);
+        console.log(data);
+        document.getElementById('databaseEvents').innerText = JSON.stringify(data);
+       
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+
+    
+        }
+
+        async function createGoogleCalendarEvent() {
+    const loggedInUser = sessionStorage.getItem("loggedInUser");
+
+    fetch(`/getAllEvents?loggedInUser=${loggedInUser}`)
+        .then(response => response.json())
+        .then(data => {
+            
+
+            // Iterate through each event and create Google Calendar event
+            data.forEach(event => {
+
+
+                const googleCalendarEvent = {
+                    'summary': event.eventName,
+                    'location': event.eventDetails,
+                    'description': 'Event Saved In Calender',
+                    'start': {
+                        'dateTime': new Date(event.eventDate).toISOString(),
+                        'timeZone': 'UTC', // Adjust timezone as needed
+                    },
+                    'end': {
+                        'dateTime': new Date(event.eventDate).toISOString(),
+                        'timeZone': 'UTC', // Adjust timezone as needed
+                    },
+                    'attendees': [],
+                    'reminders': {
+                        'useDefault': false,
+                        'overrides': [
+                            { 'method': 'email', 'minutes': 24 * 60 },
+                            { 'method': 'popup', 'minutes': 10 },
+                        ],
+                    },
+                };
+                console.log(googleCalendarEvent)
+                // // // Call the endpoint to create a Google Calendar event
+                fetch('/createGoogleCalendarEvent', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(googleCalendarEvent),
+                })
+                .then(response => response.json())
+                .then(result => {
+                    console.log('Google Calendar Event created:', result);
+                })
+                .catch(error => {
+                    console.error('Error creating Google Calendar Event:', error);
+                });
+
+                
+
+
+            });
+            
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
+
+
+
+        async function fetchGoogleCalendarEvents() {
+            const response = await fetch('/getGoogleCalendarEvents');
+            const data = await response.json();
+
+            document.getElementById('googleCalendarEvents').innerText = JSON.stringify(data);
+        }
+    </script>
+</body>
+</html>
