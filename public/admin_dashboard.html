@@ -256,7 +256,7 @@
             }
 
             const users = await response.json();
-            console.log(users);
+            //console.log(users);
             // Update the user list
             updateUsersList(users);
         } catch (error) {
@@ -273,8 +273,8 @@
             }
 
             const users = await response.json();
-            console.log("lakshinnnnnnnn");
-            console.log(users);
+           // console.log("lakshinnnnnnnn");
+           // console.log(users);
             // Update the user list
            // updateEventList(users);
         } catch (error) {
@@ -303,7 +303,7 @@
 
             const event = await response.json();
             
-            console.log(event);
+           // console.log(event);
             // Update the event list
            // updateEventList(users);
              clearApprovedEvents(event);
@@ -321,7 +321,7 @@
         function updateEventList(events) {
 
             if (events && events.length > 0 && Array.isArray(events)) {
-        console.log("hiii+hello");
+       // console.log("hiii+hello");
 }
 else{
 //      console.log("hiii2");
@@ -377,7 +377,7 @@ tableBody.innerHTML=`<thead>
                     }
 
       approvalbutton.onclick = function () {
-          console.log("pathak12345");
+          //console.log("pathak12345");
           acceptuserrequest(event.loggedInUser,event.eventName);
       approvalbutton.className = 'btn btn-success btn-sm';
 
@@ -414,7 +414,7 @@ tableBody.innerHTML=`<thead>
            // console.log(users);
 
 if (users && users.length > 0 && Array.isArray(users)) {
-        console.log("hiii");
+       // console.log("hiii");
 }
 else{
 //      console.log("hiii2");
@@ -442,7 +442,7 @@ tableBody.innerHTML=`<thead>
 
     if (users && Array.isArray(users) && users.length>0 ) {
       
-      console.log(users);
+     // console.log(users);
       
               users.forEach(event => {
       
@@ -467,7 +467,7 @@ tableBody.innerHTML=`<thead>
       
       
                   deleteButton.onclick = function () {
-                      console.log("pathak12345");
+                   //   console.log("pathak12345");
                      deleteuser(event.username);
                       // window.location.reload(true);
                     };
@@ -481,7 +481,7 @@ tableBody.innerHTML=`<thead>
                   updateButton.className = 'btn btn-danger btn-sm';
 
                   updateButton.onclick = function () {
-                      console.log("update onclick");
+                     // console.log("update onclick");
 
                       //take input new email and new pwd from user 
                      updateuser(event.username);
@@ -565,7 +565,7 @@ tableBody.innerHTML=`<thead>
             }
 
             const users = await response.json();
-            console.log(users);
+          //  console.log(users);
             // Update the user list
             updateUsersList(users);
 
@@ -589,7 +589,7 @@ tableBody.innerHTML=`<thead>
 })
 .then(response => response.json())
 .then(data => {
-    console.log(data);
+   // console.log(data);
     if (data.success) {
         console.log('User details updated successfully!');
         const tableBody = document.getElementById('user-table-body');
@@ -642,8 +642,8 @@ tableBody.innerHTML=`<thead>
         
         console.log(data);
         if (data.success) {
-            console.log("pathak12");
-            console.log(data);
+           // console.log("pathak12");
+           // console.log(data);
             const tableBody = document.getElementById('user-table-body');
             tableBody.innerHTML='';
             displayEntireTable();
@@ -663,8 +663,8 @@ tableBody.innerHTML=`<thead>
 
         function clearApprovedEvents(events) {
 
-            console.log("lakshittttt");
-            console.log(events);
+          //  console.log("lakshit");
+            //console.log(events);
             const tableBody = document.getElementById('user-table-body2');
 
             tableBody.innerHTML = `<thead>
@@ -712,7 +712,7 @@ const isApproved = localStorage.getItem(`approval-${event.loggedInUser}-${event.
             }
 
 approvalbutton.onclick = function () {
-  console.log("pathak12345");
+ // console.log("pathak12345");
   acceptuserrequest(event.loggedInUser,event.eventName);
 approvalbutton.className = 'btn btn-success btn-sm';
 
@@ -735,16 +735,6 @@ else
           <h2>No Events.</h2>
       `;
   }
-
-
-
-
-
-
-
-
-
-
 
             
         }
